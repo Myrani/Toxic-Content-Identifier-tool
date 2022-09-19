@@ -1,0 +1,2 @@
+# Toxic-Content-Identifier-tool
+The goal of this project is to create a tool that is able to identify toxic content and their disseminators. In particular, a study on the extraction and classification of comments, post contents and users should be conducted based on Reddit. To this end, an interface should be developed that allows the visualizations of the aggregated results in order to provide a means of analysis and comparison. An underlying model should therefore be developed that triggers an alert in case of identifying a user developing a toxic dissemination pattern.
