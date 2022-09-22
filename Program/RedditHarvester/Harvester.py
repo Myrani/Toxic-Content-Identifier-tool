@@ -12,6 +12,12 @@ class Harvester():
         self.datahandler = DataHandler()
 
     def _generateScrapingManifest(self):
+        """
+            Todo : Function keeping track of where and what task the harvester has done and what was left to do in case of emergency shutdow
+
+            To stock into Parameters/Manifests/ ... 
+        
+        """
         pass
 
     def harvestSubredditFrom(self,subreddit,timedict,minimumScore):

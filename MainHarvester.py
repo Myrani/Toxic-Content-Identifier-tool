@@ -11,3 +11,7 @@ reddit = praw.Reddit(
 
 harvester = Harvester(reddit=reddit)
 
+url = "https://www.reddit.com/r/redditdev/comments/38wzzm/praw_how_to_get_submission_text/"
+
+harvester.harvestSubmission(url)
+

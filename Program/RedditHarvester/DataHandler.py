@@ -9,17 +9,7 @@ class DataHandler():
     def __init__(self) -> None:
         self.pathHandler = PathHandler()
 
-    def _fetchReplies(self,comment):
-        """
-            Internal function used to fetch comments in a Depth First manners .
-        """
-        commentDict = {"id":comment.id,"body":comment.body,"score":comment.score,"replies":[]}
-        
-        if comment.replies:
-            for reply in comment.replies:
-                commentDict["replies"].append(self._fetchReplies(reply))
 
-        return commentDict
 
     def convertSubmissionToJSONwithDayFolder(self,submission,timestamp):
         """
@@ -54,7 +44,19 @@ class DataHandler():
         
         with open(cleanName, 'w') as outfile:
             json.dump(post, outfile)
+    
+    
+    def _fetchReplies(self,comment):
+        """
+            Internal function used to fetch comments in a Depth First manners .
+        """
+        commentDict = {"commentId":comment.id,"author":comment.author.id,"body":comment.body,"score":comment.score,"replies":[]}
+        
+        if comment.replies:
+            for reply in comment.replies:
+                commentDict["replies"].append(self._fetchReplies(reply))
 
+        return commentDict
 
     def convertSubmissionToJSON(self,submission):
         """
@@ -62,7 +64,7 @@ class DataHandler():
         
         """
 
-        post = {"title":submission.title,"score":submission.score,"id":submission.id,"url":submission.url,"comments":[]}
+        post = {"title":submission.title,"author":submission.author.id,"score":submission.score,"id":submission.id,"url":submission.url,"content":submission.selftext,"comments":[]}
         submission.comments.replace_more(limit=0)
         comment_queue = submission.comments[:]  # Seed with top-level
         
@@ -76,9 +78,8 @@ class DataHandler():
         """
             Internal function used to create a JSON file from a reddit post converted into a dictionnary 
         """
-        name = """RawPosts/"""+post["title"]+""".json"""
-        
-        with open(self._cleanName(name), 'w') as outfile:
+
+        with open(self._cleanName(self.pathHandler.getRawPostsPath(),post["title"]), 'w') as outfile:
             json.dump(post, outfile)
     
     def _cleanName(self,directory,string):
@@ -90,7 +91,7 @@ class DataHandler():
         if len(string) > 253:
             string = string[0:220]
             return string
-        return string 
+        return string+".json"  
 
     def _fetchNextPrint(self,comment,deepness):
         """
