@@ -30,3 +30,6 @@ class PathHandler():
 
     def getLabelSetsPath(self):
         return self.path["LabelSetsFileFilePath"]
+    
+    def getUsersMetricsFilePath(self):
+        return self.path["UsersMetricsFilePath"]

@@ -11,6 +11,7 @@
 """
 
 paths = {"RawPostsFilePath":"Results/RawPosts/",
+        "UsersMetricsFilePath":"Results/UsersMetrics/",
         "LabeledPostsFilePath":"Results/LabeledPosts/",
         "BagOfWordsFilePath":"Results/BagOfWords/",
         "RefinedPostsFilePath":"Results/RefinedPosts/",
