@@ -1,14 +1,13 @@
-import praw
 from Program.RedditHarvester.DataHandler import DataHandler
 
-from psaw import PushshiftAPI
+from pmaw import PushshiftAPI
 import datetime as dt
 
 class Harvester():
     def __init__(self,reddit) -> None:
         
         self.reddit = reddit
-        self.api = PushshiftAPI(reddit)
+        self.api = PushshiftAPI(praw = self.reddit)
         self.datahandler = DataHandler()
 
     def _generateScrapingManifest(self):
@@ -32,19 +31,22 @@ class Harvester():
         currentday = dt.datetime(timedict["year"],timedict["month"] , timedict["day"])
 
         while currentday != dt.datetime.today():
-            
+            print(currentday)
             start_epoch=int(currentday.timestamp())
             nextDay = currentday + dt.timedelta(days = 1)
             end_epoch=int(nextDay.timestamp())
 
 
-            listOfIDs = list(self.api.search_submissions(after=start_epoch,
+            listOfSubmissions = list(self.api.search_submissions(after=start_epoch,
                             before=end_epoch,
                             subreddit=subreddit,
                             score = str(">"+str(minimumScore)),
                             limit=None))
 
-            self.harvestFromIdList(listOfIDs,start_epoch)
+            listOfIds = [submission["id"] for submission in listOfSubmissions]
+        
+
+            self.harvestFromIdList(listOfIds,start_epoch)
 
             currentday = currentday+dt.timedelta(days = 1)
 
@@ -53,7 +55,9 @@ class Harvester():
             Harvest a submissions by looping over a given list of submission Id
         """
         for id in listOfIDs:
+        
             submission = self.reddit.submission(id)
+            
             self.datahandler.convertSubmissionToJSONwithDayFolder(submission,timestamp)
 
     def harvestSubreddit(self,subreddit,mode,limit):

@@ -5,7 +5,7 @@ import datetime as dt
 from Program.Utils.PathHandler import PathHandler
 
 
-class DataHandler():
+class ExplorerDataHandler():
     def __init__(self) -> None:
         self.pathHandler = PathHandler()
 
@@ -80,13 +80,13 @@ class DataHandler():
 
         self._dumpToJSON(post)
     
-    def _dumpToJSON(self,post):
+    def _dumpToJSON(self,metrics):
         """
             Internal function used to create a JSON file from a reddit post converted into a dictionnary 
         """
 
-        with open(self._cleanName(self.pathHandler.getRawPostsPath(),post["title"]), 'w') as outfile:
-            json.dump(post, outfile)
+        with open(self._cleanName(self.pathHandler.getRawPostsPath(),metrics["username"]), 'w') as outfile:
+            json.dump(metrics, outfile)
     
     def _cleanName(self,directory,string):
         """

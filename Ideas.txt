@@ -1,0 +1,4 @@
+user Prefilters : to establish if an users is at risk to be considered a bot 
+    - Account age
+    - has verified e mail 
+    - karma 
