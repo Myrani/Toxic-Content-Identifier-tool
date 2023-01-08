@@ -15,20 +15,34 @@ class AccountExplorer():
 
 
         commentList = self._getAllUserCommentsIds(username)
+        
 
         
-        currentUserCommentMetrics = {"username":username} 
+        currentUserCommentMetrics = {"username":username,"comments":{},"posts":{}} 
 
 
         for comment in commentList:
 
             if str(comment.subreddit.display_name) not in currentUserCommentMetrics.keys() :
-                currentUserCommentMetrics[str(comment.subreddit.display_name)] = [comment.body]
-            else:
-                currentUserCommentMetrics[str(comment.subreddit.display_name)].append(comment.body)
+                currentUserCommentMetrics["comments"][str(comment.subreddit.display_name)] = [{"timestamp":comment.created_utc,"content":comment.body}]
             
-        self.explorerDataHandler._dumpToJSON(currentUserCommentMetrics)
+            else:
+                currentUserCommentMetrics["comments"][str(comment.subreddit.display_name)].append({"timestamp":comment.created_utc,"content":comment.body})
+            
 
+        postList = self.getAllUserPosts(username)
+
+        for post in postList:
+
+            if str(post.subreddit.display_name) not in currentUserCommentMetrics.keys() :
+
+                currentUserCommentMetrics["posts"][str(post.subreddit.display_name)] = [{"timestamp":post.created_utc,"content":post.title}]
+
+            else:
+                currentUserCommentMetrics["posts"][str(post.subreddit.display_name)].append({"timestamp":post.created_utc,"content":post.title})
+
+
+        self.explorerDataHandler._dumpToJSON(currentUserCommentMetrics)
 
 
     def getAllUserPosts(self,user):
@@ -36,7 +50,7 @@ class AccountExplorer():
             Returns all the posts of a passed user    
         
         """
-
+        return [comment for comment in self.reddit.redditor(user).submissions.new(limit=None)]
     
     def _getAllUserCommentsIds(self,user):
         """
