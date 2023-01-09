@@ -13,33 +13,33 @@ class AccountExplorer():
 
     def harvestUserMetrics(self,username):
 
-        currentUserCommentMetrics = {"username":username,"comments":{},"posts":{}} 
+        currentUserMetrics = {"username":username,"comments":{},"posts":{}} 
         
         commentList = self._getAllUserCommentsIds(username)
 
 
         for comment in commentList:
 
-            if str(comment.subreddit.display_name) not in currentUserCommentMetrics.keys() :
-                currentUserCommentMetrics["comments"][str(comment.subreddit.display_name)] = [{"timestamp":comment.created_utc,"content":comment.body}]
+            if str(comment.subreddit.display_name) not in  currentUserMetrics["comments"] :
+                currentUserMetrics["comments"][str(comment.subreddit.display_name)] = [{"timestamp":comment.created_utc,"content":comment.body}]
             
             else:
-                currentUserCommentMetrics["comments"][str(comment.subreddit.display_name)].append({"timestamp":comment.created_utc,"content":comment.body})
+                currentUserMetrics["comments"][str(comment.subreddit.display_name)].append({"timestamp":comment.created_utc,"content":comment.body})
             
 
         postList = self.getAllUserPosts(username)
 
         for post in postList:
 
-            if str(post.subreddit.display_name) not in currentUserCommentMetrics.keys() :
+            if str(comment.subreddit.display_name) not in currentUserMetrics["posts"]:
 
-                currentUserCommentMetrics["posts"][str(post.subreddit.display_name)] = [{"timestamp":post.created_utc,"content":post.title}]
+                currentUserMetrics["posts"][str(post.subreddit.display_name)] = [{"timestamp":post.created_utc,"content":post.title}]
 
             else:
-                currentUserCommentMetrics["posts"][str(post.subreddit.display_name)].append({"timestamp":post.created_utc,"content":post.title})
+                currentUserMetrics["posts"][str(post.subreddit.display_name)].append({"timestamp":post.created_utc,"content":post.title})
 
 
-        self.explorerDataHandler._dumpToJSON(currentUserCommentMetrics)
+        self.explorerDataHandler._dumpToJSON(currentUserMetrics)
 
 
     def getAllUserPosts(self,user):
