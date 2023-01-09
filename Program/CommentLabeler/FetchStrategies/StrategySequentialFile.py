@@ -1,6 +1,6 @@
 from typing import overload
 from Program.CommentLabeler.FetchStrategies.Strategy import Strategy
-from Program.NLP.PathHandler import PathHandler
+from Program.Utils.PathHandler import PathHandler
 from Program.Parameters.paths import paths
 import json
 import os

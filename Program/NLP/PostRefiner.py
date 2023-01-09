@@ -1,7 +1,7 @@
 import nltk
 import json
 import os
-from Classes.NLP.PathHandler import PathHandler
+from Program.Utils.PathHandler import PathHandler
 from Parameters.paths import paths
 
 class PostRefiner():
