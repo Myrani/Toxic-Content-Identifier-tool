@@ -13,12 +13,9 @@ class AccountExplorer():
 
     def harvestUserMetrics(self,username):
 
-
-        commentList = self._getAllUserCommentsIds(username)
-        
-
-        
         currentUserCommentMetrics = {"username":username,"comments":{},"posts":{}} 
+        
+        commentList = self._getAllUserCommentsIds(username)
 
 
         for comment in commentList:
