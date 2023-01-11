@@ -1,5 +1,5 @@
-from Classes.NLP.PathHandler import PathHandler
-from Parameters.paths import paths
+from Program.Utils.PathHandler import PathHandler
+from Program.Parameters.paths import paths
 import os
 import json
 
@@ -11,7 +11,7 @@ class ClassifierGenerator():
         
         """
 
-        self.pathHandler = PathHandler(paths)
+        self.pathHandler = PathHandler()
 
     def _getAllBagOfWords(self):
         """

@@ -5,7 +5,7 @@ from PyQt6.QtCore import Qt
 from Program.CommentLabeler .Widgets.LabelSetCreationWidget import LabelSetCreationWidget
 from Program.CommentLabeler .Widgets.LabelSetLabelFieldWidget import LabelSetLabelFieldWidget
 from Program.CommentLabeler .Widgets.LabelSetShortcutWidget import LabelSetShortcutWidget
-from Program.NLP.PathHandler import PathHandler
+from Program.Utils.PathHandler import PathHandler
 from Program.Parameters.paths import paths
 import json
 

@@ -1,5 +1,5 @@
 import random
-from Classes.NLP.PathHandler import PathHandler
+from Program.Utils.PathHandler import PathHandler
 from Parameters.paths import paths
 import json
 import os 

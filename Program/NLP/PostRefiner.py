@@ -2,7 +2,7 @@ import nltk
 import json
 import os
 from Program.Utils.PathHandler import PathHandler
-from Parameters.paths import paths
+from Program.Utils.WindowsNamingConventionsHandler import WindowsNamingConventionsHandler
 
 class PostRefiner():
     def __init__(self) -> None:
@@ -12,7 +12,8 @@ class PostRefiner():
         
         """
 
-        self.pathHandler = PathHandler(paths)
+        self.pathHandler = PathHandler()
+        self.namingConventionsHandler = WindowsNamingConventionsHandler()
 
     def loadRawPost(self,name):
         """
@@ -64,7 +65,7 @@ class PostRefiner():
         """
             Internal function used to create a JSON file from refinedPost and dump it 
         """
-        name = self.pathHandler.getRefinedPostsPath()+post["title"]+""".json"""
+        name = self.namingConventionsHandler._cleanName(string=post["title"],directory=self.pathHandler.getRefinedPostsPath())+""".json"""
         
         with open(name, 'w') as outfile:
             json.dump(post, outfile)

@@ -11,7 +11,7 @@ import random
 class StrategySequentialFile(Strategy):
     def __init__(self) -> None:
         super().__init__()
-        self.pathHandler = PathHandler(paths=paths)
+        self.pathHandler = PathHandler()
         
         self.allMonths =[month for month in os.listdir(self.pathHandler.getRawPostsPath())]
         self.currentMonth = self.allMonths.pop(0)

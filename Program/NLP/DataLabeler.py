@@ -12,21 +12,13 @@ class DataLabeler():
 
     def __init__(self,pathHandler) -> None:
         self.pathHandler = pathHandler
-        self.askText= """
-            1 VeryBullish
-            2 Bullish
-            3 Neutral
-            4 Bearish
-            5 VeryBearish
-        
-        """
+
 
     def _askForOpinion(self,string):
         """
             Function to ask the sentiment of the post and it's replies
         """
 
-        print(self.askText)
         print(string)
         return int(input("How's this ?"))
         

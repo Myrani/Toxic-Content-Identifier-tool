@@ -1,5 +1,6 @@
-from Parameters.paths import paths
-from Classes.NLP.PathHandler import PathHandler
+from Program.Parameters.paths import paths
+from Program.Utils.PathHandler import PathHandler
+from Program.Utils.WindowsNamingConventionsHandler import WindowsNamingConventionsHandler
 import json
 import os 
 
@@ -11,8 +12,8 @@ class PostBagger():
         
         """
 
-
-        self.pathHandler = PathHandler(paths)
+        self.pathHandler = PathHandler()
+        self.namingConventionsHandler = WindowsNamingConventionsHandler()
 
     def _dumpBagOfWordsToJSON(self,bag):
         """
@@ -25,7 +26,7 @@ class PostBagger():
         
         
         """
-        name = self.pathHandler.getBagOfWordsPath()+bag["title"]+""".json"""
+        name = self.namingConventionsHandler._cleanName(string=bag["title"],directory=self.pathHandler.getRefinedPostsPath())+""".json"""
         
         with open(name, 'w') as outfile:
             json.dump(bag, outfile)
