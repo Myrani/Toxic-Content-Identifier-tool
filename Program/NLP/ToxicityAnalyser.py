@@ -4,7 +4,7 @@ from Parameters.paths import paths
 import json
 import os 
 
-class SentimentAnalyser():
+class ToxicityAnalyser():
 
     def __init__(self,classifierName) -> None:
         

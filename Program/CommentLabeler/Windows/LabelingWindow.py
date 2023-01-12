@@ -2,7 +2,7 @@ import typing
 import json
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
-from Program.NLP.DataLabeler import DataLabeler
+from Program.NLP.LabelPipeline.DataLabeler import DataLabeler
 from Program.Utils.PathHandler import PathHandler
 from Program.Parameters.paths import paths
 

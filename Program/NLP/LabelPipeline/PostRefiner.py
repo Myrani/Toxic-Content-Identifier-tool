@@ -55,13 +55,12 @@ class PostRefiner():
         for labeledComment in labeledPost["content"]:
 
             tokenisedPost["content"].append({"label":labeledComment["label"] ,"comment":self._tokenizeComment(labeledComment["comment"])})
-        
+            
 
         
         self._dumpRefinedPostToJSON(tokenisedPost)
 
     def _dumpRefinedPostToJSON(self,post):
-        print(post)
         """
             Internal function used to create a JSON file from refinedPost and dump it 
         """

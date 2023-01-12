@@ -1,6 +1,6 @@
-from Program.NLP.PostBagger import PostBagger
-from Program.NLP.PostRefiner import PostRefiner
-from Program.NLP.ClassifierGenerator import ClassifierGenerator
+from Program.NLP.LabelPipeline.PostBagger import PostBagger
+from Program.NLP.LabelPipeline.PostRefiner import PostRefiner
+from Program.NLP.LabelPipeline.ClassifierGenerator import ClassifierGenerator
 
 
 postRefiner = PostRefiner()

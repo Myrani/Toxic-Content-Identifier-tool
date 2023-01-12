@@ -26,8 +26,10 @@ class PostBagger():
         
         
         """
-        name = self.namingConventionsHandler._cleanName(string=bag["title"],directory=self.pathHandler.getRefinedPostsPath())+""".json"""
+        name = self.namingConventionsHandler._cleanName(string=bag["title"],directory=self.pathHandler.getBagOfWordsPath())+""".json"""
         
+        print(name)
+
         with open(name, 'w') as outfile:
             json.dump(bag, outfile)
 
@@ -64,6 +66,7 @@ class PostBagger():
         
         """
         for post in self._getAllRefinedPosts():
+            print(post)
             bag = self.bagRefinedPost(self._loadRefinedPost(post))
             self._dumpBagOfWordsToJSON(bag)
   
@@ -99,15 +102,18 @@ class PostBagger():
         bag = {"title": refinedPost["title"]}
 
         for labeledComment in refinedPost["content"]:
-
+            
             for key,value in self._extractCommentContent(labeledComment["comment"]).items():
-                
+
                 if labeledComment["label"] in bag:
-                
+                    
                     if key in bag[labeledComment["label"]]:
                          bag[labeledComment["label"]][key] = bag[labeledComment["label"]][key] + value
                     else:
                         bag[labeledComment["label"]][key] = value        
                 else:
+                    
                     bag[labeledComment["label"]] = {key:value}
+        
+     
         return bag
