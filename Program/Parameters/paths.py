@@ -10,11 +10,12 @@
     To modify at your own needs.
 """
 
-paths = {"RawPostsFilePath":"Results/RawPosts/",
-        "UsersMetricsFilePath":"Results/UsersMetrics/",
-        "LabeledPostsFilePath":"Results/LabeledPosts/",
-        "BagOfWordsFilePath":"Results/BagOfWords/",
-        "RefinedPostsFilePath":"Results/RefinedPosts/",
+paths = {"RawUsersMetricsFilePath":"Results/UsersMetrics/RawUserMetrics/",
+        "BaggedUserMetricsFilePath":"Results/UsersMetrics/BaggedUserMetrics/",
+        "RawPostsFilePath":"Results/Posts/RawPosts/",
+        "LabeledPostsFilePath":"Results/Posts/LabeledPosts/",
+        "BagOfWordsFilePath":"Results/Posts/BagOfWords/",
+        "RefinedPostsFilePath":"Results/Posts/RefinedPosts/",
         "ClassifiersFilePath":"Results/Classifiers/",
         "ParametersFileFilePath":"Program/Parameters/",
         "LabelSetsFileFilePath":"Program/Parameters/LabelSets/"}

@@ -4,7 +4,7 @@ from Program.Utils.WindowsNamingConventionsHandler import WindowsNamingConventio
 import json
 import os 
 
-class PostBagger():
+class UserMetricsBagger():
     def __init__(self) -> None:
         """ 
 
@@ -32,42 +32,7 @@ class PostBagger():
         with open(name, 'w') as outfile:
             json.dump(bag, outfile)
 
-    def _getAllRefinedPosts(self):
-        """
-            Return all the RefinedPosts available in the RefinedPosts Folder
 
-            Args: None
-
-            returns : [A list of Filename] 
-        """
-        return os.listdir(self.pathHandler.getRefinedPostsPath())
-
-    def _loadRefinedPost(self,name):
-        """
-            Loads a post from the RefinedPosts folder
-        
-            Args: name : String 
-        
-            return : Json file 
-        """
-        data = open(self.pathHandler.getRefinedPostsPath()+name)
-        return json.load(data)
-
-
-    def bagAllRefinedPosts(self):
-        """
-            Iterate over all refined posts in the specified refinedpost Folder and generate for each one a corresponding bag of words stocked in
-            the BagOfWords Folder specified
-
-            Args : None
-
-            Returns : None 
-        
-        """
-        for post in self._getAllRefinedPosts():
-            bag = self.bagRefinedPost(self._loadRefinedPost(post))
-            self._dumpBagOfWordsToJSON(bag)
-  
     
     def _extractCommentContent(self,comment):
         """

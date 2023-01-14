@@ -1,15 +1,25 @@
 import random
 from Program.Utils.PathHandler import PathHandler
-from Parameters.paths import paths
+from Program.Parameters.paths import paths
+from Program.RedditExplorer.AccountExplorer import AccountExplorer
 import json
 import os 
 
 class ToxicityAnalyser():
 
-    def __init__(self,classifierName) -> None:
+    def __init__(self,classifierName,reddit) -> None:
         
+        """
+            Bridge class over the NLP side and Reddit API .
+            Once a classifier is loaded, this class serves as a comment analyser
+            of a given profile .
+        
+        """
+
+
         # Basic info setup 
-        self.pathHandler = PathHandler(paths=paths)
+        self.pathHandler = PathHandler()
+        self.accountExplorer = AccountExplorer(reddit=reddit)
         self.classifierName = classifierName
         
         # PlaceHolder 
@@ -21,31 +31,23 @@ class ToxicityAnalyser():
         self._setUpClassifier()
 
     def _loadClassifier(self):
-    
-        data = open(self.pathHandler.getClassifiersPath()+self.classifierName+""".json""")
+        """
+            Loads a classifier with the given name
+            
+        """
+        
+        data = open(self.pathHandler.getClassifiersPath()+self.classifierName)
         return json.load(data)
     
-    
-
-    def _getRandomBag(self):
-
+    def _judgeUseretrics(self,username):
         """
-            Internal function used to get all bags of words in the BagOfWords Folder 
+            Harvest all public specific user data 
         
         """
-        liste = os.listdir(self.pathHandler.getBagOfWordsPath())
-        return liste[random.randint(0,len(liste)-1)]
+        ### self.accountExplorer.harvestUserMetrics(username)
+        usermetrics = self.accountExplorer.getUserMetrics(username)
+        print(usermetrics)
 
-
-    def _loadRadomBag(self):
-
-        """
-            Internal function used to load the data from a specified bag of words
-        
-        """
-        data = open(self.pathHandler.getBagOfWordsPath()+self._getRandomBag())
-        return json.load(data)
-    
 
 
     def _setUpClassifier(self):
@@ -55,9 +57,9 @@ class ToxicityAnalyser():
         self.uniqueWordsSet = set(loadedFile["uniqueWords"])
         self.lexiconSize = loadedFile["lexiconSize"]
 
-    def naiveBayes(self):
+    def naiveBayes(self,bagOfWords):
         results = {}
-        bagOfWords = self._loadRadomBag()
+        #bagOfWords = self._loadRadomBag()
 
 
         for label,bag in bagOfWords.items(): 
