@@ -10,7 +10,7 @@
     To modify at your own needs.
 """
 
-paths = {"RawUsersMetricsFilePath":"Results/UsersMetrics/RawUserMetrics/",
+paths = {"RawUserMetricsFilePath":"Results/UsersMetrics/RawUserMetrics/",
         "BaggedUserMetricsFilePath":"Results/UsersMetrics/BaggedUserMetrics/",
         "RawPostsFilePath":"Results/Posts/RawPosts/",
         "LabeledPostsFilePath":"Results/Posts/LabeledPosts/",

@@ -4,6 +4,7 @@ from Program.Parameters.paths import paths
 from Program.RedditExplorer.AccountExplorer import AccountExplorer
 import json
 import os 
+import nltk
 
 class ToxicityAnalyser():
 
@@ -45,19 +46,61 @@ class ToxicityAnalyser():
         
         """
         ### self.accountExplorer.harvestUserMetrics(username)
-        usermetrics = self.accountExplorer.getUserMetrics(username)
-        print(usermetrics)
+        self.accountExplorer.explorerDataHandler._dumpBaggedProfileToJSON(self._convertRawUserMetricsToBagOfWords(username))
 
 
 
     def _setUpClassifier(self):
+
+        """
+            Loads all the specs of a classifier : name, priors, uniquewords, lexiconsize, Classifier 
+        
+        """
+
         loadedFile = self._loadClassifier()
         self.classifier = loadedFile["classifier"]
         self.priors = loadedFile["priors"]
         self.uniqueWordsSet = set(loadedFile["uniqueWords"])
         self.lexiconSize = loadedFile["lexiconSize"]
 
+
+    def _tokenizeComment(self,comment):
+
+        """
+            Transforms into a list of token a given string
+        
+        """
+        return nltk.word_tokenize(comment)
+
+
+
+    def _convertRawUserMetricsToBagOfWords(self,username):
+        """
+            Convert an harvester user profile content to a bag of word structure
+        
+        """
+
+        bag = {"username": username,"bag":{}}
+
+        usermetrics = self.accountExplorer.getRawUserMetrics(username)
+
+        for key,value in usermetrics["comments"].items():
+            for comment in value:
+                for word in self._tokenizeComment(comment["content"]):
+
+                    if word in bag["bag"]:
+                        bag["bag"][word] = bag["bag"][word] + 1
+                    else:
+                        bag["bag"][word] = 1        
+        return bag
+    
     def naiveBayes(self,bagOfWords):
+        """
+            Operates a naive bayes over a bag of words passed in argument with the loaded classifier
+
+        """    
+    
+        
         results = {}
         #bagOfWords = self._loadRadomBag()
 

@@ -19,6 +19,12 @@ class ExplorerDataHandler():
         with open(self.namingHandler._cleanName(self.pathHandler.getRawUserMetricsFilePath(),metrics["username"]), 'w') as outfile:
             json.dump(metrics, outfile)
     
+    def _dumpBaggedProfileToJSON(self,baggedProfile):
+
+        with open(self.namingHandler._cleanName(self.pathHandler.getBaggedUserMetricsFilePath(),baggedProfile["username"])+".json", 'w') as outfile:
+            json.dump(baggedProfile, outfile)
+
+
     def _loadUserMetrics(self,username):
 
         """

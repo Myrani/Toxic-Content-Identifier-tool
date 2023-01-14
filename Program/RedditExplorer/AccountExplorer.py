@@ -41,7 +41,7 @@ class AccountExplorer():
 
         self.explorerDataHandler._dumpToJSON(currentUserMetrics)
 
-    def getUserMetrics(self,username):
+    def getRawUserMetrics(self,username):
         return self.explorerDataHandler._loadUserMetrics(username)
 
 

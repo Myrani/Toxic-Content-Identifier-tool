@@ -4,7 +4,7 @@ class PathHandler():
 
     def __init__(self) -> None:
         """
-            Handles the Path logic in to program
+            Handles the Path logic into the program
 
         """
         
@@ -36,3 +36,4 @@ class PathHandler():
 
     def getBaggedUserMetricsFilePath(self):
         return self.path["BaggedUserMetricsFilePath"]
+        
