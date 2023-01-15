@@ -47,7 +47,7 @@ class ToxicityAnalyser():
         """
         ### self.accountExplorer.harvestUserMetrics(username)
         self.accountExplorer.explorerDataHandler._dumpBaggedProfileToJSON(self._convertRawUserMetricsToBagOfWords(username))
-
+        self.naiveBayes(self.pathHandler.getBaggedUserMetricsFilePath())        
 
 
     def _setUpClassifier(self):
@@ -92,6 +92,18 @@ class ToxicityAnalyser():
                         bag["bag"][word] = bag["bag"][word] + 1
                     else:
                         bag["bag"][word] = 1        
+        
+        for key,value in usermetrics["posts"].items():
+            for comment in value:
+                for word in self._tokenizeComment(comment["content"]):
+
+                    if word in bag["bag"]:
+                        bag["bag"][word] = bag["bag"][word] + 1
+                    else:
+                        bag["bag"][word] = 1             
+ 
+        
+        
         return bag
     
     def naiveBayes(self,bagOfWords):
@@ -113,4 +125,5 @@ class ToxicityAnalyser():
                 for word,count in bag.items():
                         results[label] = results[label] * ( (self.classifier[label][word] + 1) / (self.lexiconSize + len(self.uniqueWordsSet.union(set(bag.values())))) )
                     
+           
             print(results)

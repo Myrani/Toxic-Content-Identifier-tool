@@ -44,16 +44,16 @@ class LabelingWindow(QWidget):
             return : Str : The fetched replies in an indented Str Format 
         
         """
-        
-        if comment["replies"]:
-            
+        print("Comment : ",comment)
+       
+        if comment is not None:
             label = QLabel( "\n "+deepness*"   |"+comment["body"])
             self.labelList.append(label)
+            print("Current label list",self.labelList)
             
             for reply in comment["replies"]:
                 self._recursiveFetch(reply,deepness+1)
 
-        else:
             return None
     
     
@@ -69,7 +69,7 @@ class LabelingWindow(QWidget):
      
 
         self.labelList = [label]
-        
+    
         for comment in post["comments"]:
             self._recursiveFetch(comment,1)
         
