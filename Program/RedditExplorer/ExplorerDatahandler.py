@@ -38,3 +38,17 @@ class ExplorerDataHandler():
             MetricsJson = json.loads(userMetrics.read())
             
             return MetricsJson
+
+    def _loadUserBaggedMetrics(self,username):
+
+        """
+            Loads a saved userMetrics file and returns its content
+        
+        """
+
+        filename = self.pathHandler.getBaggedUserMetricsFilePath()+username+".json"
+
+        with open(filename, 'r') as userMetrics:
+            MetricsJson = json.loads(userMetrics.read())
+            
+            return MetricsJson

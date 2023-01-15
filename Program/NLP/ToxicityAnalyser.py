@@ -46,8 +46,8 @@ class ToxicityAnalyser():
         
         """
         ### self.accountExplorer.harvestUserMetrics(username)
-        self.accountExplorer.explorerDataHandler._dumpBaggedProfileToJSON(self._convertRawUserMetricsToBagOfWords(username))
-        self.naiveBayes(self.pathHandler.getBaggedUserMetricsFilePath())        
+        ###self.accountExplorer.explorerDataHandler._dumpBaggedProfileToJSON(self._convertRawUserMetricsToBagOfWords(username))
+        self.naiveBayes(self.accountExplorer.explorerDataHandler._loadUserBaggedMetrics(username))        
 
 
     def _setUpClassifier(self):
@@ -117,7 +117,7 @@ class ToxicityAnalyser():
         #bagOfWords = self._loadRadomBag()
 
 
-        for label,bag in bagOfWords.items(): 
+        for label,bag in bagOfWords["bag"].items(): 
             if label != "title":
                 if label not in results:
                     results[label] = self.priors[label]
