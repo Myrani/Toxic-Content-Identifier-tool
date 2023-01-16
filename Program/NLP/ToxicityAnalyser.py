@@ -111,12 +111,15 @@ class ToxicityAnalyser():
             Operates a naive bayes over a bag of words passed in argument with the loaded classifier
 
         """    
-        
-        results = dict.fromkeys(self.priors,1)
+
+        results = dict.fromkeys(self.priors,1.0)
 
         for word,count in bagOfWords["bag"].items(): 
             for prior in results.keys():
-                results[prior] = results[prior] * ( (count + 1) / (self.lexiconSize + len(self.uniqueWordsSet.union(set(bagOfWords["bag"].values())))) )
- 
-           
-        print(results)
+                if word in self.classifier[prior]:
+                    results[prior] = results[prior] * self.priors[prior] * ( (self.classifier[prior][word] + 1) / (self.lexiconSize + len(self.uniqueWordsSet.union(set(bagOfWords["bag"].values())))))
+                else:
+                     results[prior] = results[prior] * self.priors[prior] * ( 1 / (self.lexiconSize + len(self.uniqueWordsSet.union(set(bagOfWords["bag"].values())))))
+                
+                if results[prior] > 0:
+                    print(results)
