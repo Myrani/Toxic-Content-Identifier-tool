@@ -8,7 +8,7 @@ import nltk
 
 class ToxicityAnalyser():
 
-    def __init__(self,classifierName,reddit) -> None:
+    def __init__(self,reddit) -> None:
         
         """
             Bridge class over the NLP side and Reddit API .
@@ -21,24 +21,29 @@ class ToxicityAnalyser():
         # Basic info setup 
         self.pathHandler = PathHandler()
         self.accountExplorer = AccountExplorer(reddit=reddit)
-        self.classifierName = classifierName
         
         # PlaceHolder 
         self.classifier = None
+        self.loadedFile = None
         self.priors = {}
         self.uniqueWordsSet = {}
         self.lexiconSize = 0
 
-        self._setUpClassifier()
 
-    def _loadClassifier(self):
+
+    def loadSpecifiedClassifier(self,name):
         """
             Loads a classifier with the given name
             
         """
         
-        data = open(self.pathHandler.getClassifiersPath()+self.classifierName)
-        return json.load(data)
+        data = open(self.pathHandler.getClassifiersPath()+name)
+        
+        self.loadedFile =  json.load(data)
+
+        self._setUpClassifier()
+
+
     
     def _judgeUseretrics(self,username):
         """
@@ -57,11 +62,11 @@ class ToxicityAnalyser():
         
         """
 
-        loadedFile = self._loadClassifier()
-        self.classifier = loadedFile["classifier"]
-        self.priors = loadedFile["priors"]
-        self.uniqueWordsSet = set(loadedFile["uniqueWords"])
-        self.lexiconSize = loadedFile["lexiconSize"]
+    
+        self.classifier = self.loadedFile["classifier"]
+        self.priors = self.loadedFile["priors"]
+        self.uniqueWordsSet = set(self.loadedFile["uniqueWords"])
+        self.lexiconSize = self.loadedFile["lexiconSize"]
 
 
     def _tokenizeComment(self,comment):
@@ -121,5 +126,29 @@ class ToxicityAnalyser():
                 else:
                      results[prior] = results[prior] * self.priors[prior] * ( 1 / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedUserProfile["bag"].values())))))
                 
-                if results[prior] > 0:
-                    print(results)
+                if results[prior] == 0:
+                    return results
+        
+        return results
+
+
+    def naiveBayes_overPost(self,baggedUserPost):
+        """
+            Operates a naive bayes over a bag of words passed in argument with the loaded classifier
+
+        """    
+
+        results = dict.fromkeys(self.priors,1.0)
+
+        for word,count in baggedUserPost.items(): 
+            
+            for prior in results.keys():
+                if word in self.classifier[prior]:
+                    results[prior] = results[prior] * self.priors[prior] * ( (count + 1) / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedUserPost.keys())))))
+                else:
+                     results[prior] = results[prior] * self.priors[prior] * ( 1 / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedUserPost.keys())))))
+                
+                if results[prior] == 0:
+                    return results
+        
+        return results

@@ -97,21 +97,21 @@ class PostBagger():
 
             return : A bag of Word Json 
         """
-        bag = {"title": refinedPost["title"]}
+        bag = {"title": refinedPost["title"],"content":{}}
 
         for labeledComment in refinedPost["content"]:
             
             for key,value in self._extractCommentContent(labeledComment["comment"]).items():
 
-                if labeledComment["label"] in bag:
+                if labeledComment["label"] in bag["content"]:
                     
-                    if key in bag[labeledComment["label"]]:
-                         bag[labeledComment["label"]][key] = bag[labeledComment["label"]][key] + value
+                    if key in bag["content"][labeledComment["label"]]:
+                         bag["content"][labeledComment["label"]][key] = bag["content"][labeledComment["label"]][key] + value
                     else:
-                        bag[labeledComment["label"]][key] = value        
+                        bag["content"][labeledComment["label"]][key] = value        
                 else:
                     
-                    bag[labeledComment["label"]] = {key:value}
+                    bag["content"][labeledComment["label"]] = {key:value}
         
      
         return bag
