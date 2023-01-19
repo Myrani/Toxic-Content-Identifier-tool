@@ -106,7 +106,7 @@ class ToxicityAnalyser():
         
         return bag
     
-    def naiveBayes_overProfile(self,bagOfWords):
+    def naiveBayes_overProfile(self,baggedUserProfile):
         """
             Operates a naive bayes over a bag of words passed in argument with the loaded classifier
 
@@ -114,12 +114,12 @@ class ToxicityAnalyser():
 
         results = dict.fromkeys(self.priors,1.0)
 
-        for word,count in bagOfWords["bag"].items(): 
+        for word,count in baggedUserProfile["bag"].items(): 
             for prior in results.keys():
                 if word in self.classifier[prior]:
-                    results[prior] = results[prior] * self.priors[prior] * ( (self.classifier[prior][word] + 1) / (self.lexiconSize + len(self.uniqueWordsSet.union(set(bagOfWords["bag"].values())))))
+                    results[prior] = results[prior] * self.priors[prior] * ( (self.classifier[prior][word] + 1) / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedUserProfile["bag"].values())))))
                 else:
-                     results[prior] = results[prior] * self.priors[prior] * ( 1 / (self.lexiconSize + len(self.uniqueWordsSet.union(set(bagOfWords["bag"].values())))))
+                     results[prior] = results[prior] * self.priors[prior] * ( 1 / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedUserProfile["bag"].values())))))
                 
                 if results[prior] > 0:
                     print(results)
