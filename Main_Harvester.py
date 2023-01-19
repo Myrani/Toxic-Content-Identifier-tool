@@ -1,4 +1,4 @@
-import praw 
+import praw
 from Program.RedditHarvester.Harvester import Harvester
 from Program.Parameters.Secrets import secrets
 
@@ -14,5 +14,5 @@ harvester = Harvester(reddit=reddit)
 url = "https://www.reddit.com/r/pushshift/comments/zqjfgv/how_to_change_paras_with_psaw_or_pmaw/"
 
 # harvester.harvestSubmission(url) Works
-harvester.harvestSubredditFrom(subreddit="ProgrammerHumor",timedict={"year":2022,"month":12,"day":1},minimumScore=10)
-
+harvester.harvestSubredditFrom(subreddit="Conservative", timedict={
+                               "year": 2022, "month": 12, "day": 1}, minimumScore=10)
