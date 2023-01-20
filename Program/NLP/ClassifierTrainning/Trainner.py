@@ -52,6 +52,19 @@ class Trainner():
                 data = json.load(file)
                 self.addGroundTruthPost(data)
         
+    def _getClassifierPrecision(self,resultMatrix):
+
+        return resultMatrix["truePositive"] / (resultMatrix["truePositive"] + resultMatrix["falsePositive"]+ 0.0001)
+
+    def _getClassifierRecall(self,resultMatrix):
+
+        return resultMatrix["truePositive"] / (resultMatrix["truePositive"] + resultMatrix["falseNegative"]+0.0001)
+
+    def _getClassifierF1Measure(self,resultMatrix):
+        precision = self._getClassifierPrecision(resultMatrix)
+        recall = self._getClassifierRecall(resultMatrix)
+        
+        return 2*((precision*recall)/(precision+recall+0.0000000000001))
 
 
     def startClassifierTest(self):
@@ -85,5 +98,48 @@ class Trainner():
                 if bayesResults["Not Toxic"] < bayesResults["Toxic"] and label == "Not Toxic":
                     resultMatrix["flasePositive"] = resultMatrix["falsePositive"] + 1
 
+        
+
         return resultMatrix
+
+    def scaleUpClassifierToxicity(self):
+        
+        for word,count in self.classifier["classifier"]["Toxic"].items():
+            self.classifier["classifier"]["Toxic"][word] = count * 1.10
+
+        self.toxicityAnalyser.classifier =self.classifier["classifier"]
+
+    def priorsBalancing(self,addToNotToxic,addToToxic):
+        
+        self.classifier["priors"]["Not Toxic"] = self.classifier["priors"]["Not Toxic"] + addToNotToxic
+        self.classifier["priors"]["Toxic"] = self.classifier["priors"]["Toxic"] + addToToxic
+
+        self.toxicityAnalyser.priors =self.classifier["priors"]
+
+
+    def loopTests(self):
+        
+        result = self.startClassifierTest()
+        precision = self._getClassifierPrecision(result)
+        recall = self._getClassifierRecall(result)
+        F1Measure = self._getClassifierF1Measure(result)
+
+        while F1Measure < 0.97:
+            
+            self.scaleUpClassifierToxicity()
+            self.priorsBalancing(-0.05,0.05)
+
+            result = self.startClassifierTest()
+            precision = self._getClassifierPrecision(result)
+            recall = self._getClassifierRecall(result)
+            F1Measure = self._getClassifierF1Measure(result)
+
+            print("Result :",result)
+            print("Precision :",precision)
+            print("Recall",recall)
+            print("F1",F1Measure)
+            print(self.classifier["priors"])
+            
+
+        return result
 

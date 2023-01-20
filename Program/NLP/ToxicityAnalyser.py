@@ -65,6 +65,7 @@ class ToxicityAnalyser():
     
         self.classifier = self.loadedFile["classifier"]
         self.priors = self.loadedFile["priors"]
+        print(self.priors)
         self.uniqueWordsSet = set(self.loadedFile["uniqueWords"])
         self.lexiconSize = self.loadedFile["lexiconSize"]
 
