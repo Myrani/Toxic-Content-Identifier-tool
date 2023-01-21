@@ -19,7 +19,6 @@ class DataLabeler():
             Function to ask the sentiment of the post and it's replies
         """
 
-        print(string)
         return int(input("How's this ?"))
         
 
@@ -33,7 +32,15 @@ class DataLabeler():
         for reply in comment["replies"]:
             self._fetchNextStringToLabel(reply)
 
+    def _moveRawPostOnceLabeled(self,postOld,postNew):
+        """
 
+            Function used to archive a RawPost once it has been labeled
+        
+        """
+        
+        print("MOOOVE")
+        shutil.move( postOld, postNew)
 
     def _labelPost(self,post):
         """
@@ -42,10 +49,13 @@ class DataLabeler():
         """
 
         post["Label"] = self._askForOpinion(post["title"])
+        
         for comment in post["comments"]:
             self._fetchNextStringToLabel(comment)
 
+
         return post
+    
     def _cleanName(self,directory,string):
         """
             Clean the post name to fit the OS file name formatting 
@@ -88,7 +98,7 @@ class DataLabeler():
         """
 
         month = self._selectRandomMonth()
-        allDays =[day for day in os.listdir(self.pathHandler.getRawPostsPath()+"/"+month)]
+        allDays =[day for day in os.listdir(self.pathHandler.getRawPostsPath()+month)]
 
         return (month,allDays[random.randint(0, len(allDays)-1)])
 
@@ -97,7 +107,7 @@ class DataLabeler():
         tupleMonthDay = self._selectRandowDay()
         rootPath = self.pathHandler.getRawPostsPath()
 
-        return [rootPath+"/"+tupleMonthDay[0]+"/"+tupleMonthDay[1]+"/"+file for file in os.listdir(rootPath+"/"+tupleMonthDay[0]+"/" +tupleMonthDay[1])]
+        return [rootPath+tupleMonthDay[0]+"/"+tupleMonthDay[1]+"/"+file for file in os.listdir(rootPath+"/"+tupleMonthDay[0]+"/" +tupleMonthDay[1])]
 
 
     def _saveLabeledPost(self,post):
@@ -109,8 +119,14 @@ class DataLabeler():
         """
 
         currentFolder = self.pathHandler.getLabeledPostsPath()
+        oldFolder = self.pathHandler.getRawPostsPath()
+        newFolder = self.pathHandler.getDoneRawPostsPath()
 
         cleanName = self._cleanName(currentFolder,post["title"])+""".json"""
-        
+        rawPath = self._cleanName(oldFolder,post["title"])+""".json"""
+        newPath = self._cleanName(newFolder,post["title"])+""".json"""
+
         with open(cleanName, 'w') as outfile:
             json.dump(post, outfile)
+
+        

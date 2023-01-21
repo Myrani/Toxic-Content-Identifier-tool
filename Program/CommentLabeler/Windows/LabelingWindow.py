@@ -44,12 +44,12 @@ class LabelingWindow(QWidget):
             return : Str : The fetched replies in an indented Str Format 
         
         """
-        print("Comment : ",comment)
+        #print("Comment : ",comment)
        
         if comment is not None:
             label = QLabel( "\n "+deepness*"   |"+comment["body"])
             self.labelList.append(label)
-            print("Current label list",self.labelList)
+            #print("Current label list",self.labelList)
             
             for reply in comment["replies"]:
                 self._recursiveFetch(reply,deepness+1)
@@ -87,7 +87,7 @@ class LabelingWindow(QWidget):
      
 
         self.labelList = [label]
-        print(post["content"])
+        #print(post["content"])
         self.readZoneWidget.addChildListPostHistory(post["content"])
 
 
@@ -118,7 +118,7 @@ class LabelingWindow(QWidget):
         return labelisedContent
     
     def labelPost(self):
-        print("post",self.currentPost)
+        #print("post",self.currentPost)
         """
 
             Function in charge of attributing a label, to be trigerred by the user inputscurrentActiveLabels 

@@ -13,6 +13,9 @@ class PathHandler():
     def getRawPostsPath(self):
         return self.path["RawPostsFilePath"]
     
+    def getDoneRawPostsPath(self):
+        return self.path["DoneRawPostsFilePath"]
+
     def getRefinedPostsPath(self):
         return self.path["RefinedPostsFilePath"]
 
@@ -36,4 +39,6 @@ class PathHandler():
 
     def getBaggedUserMetricsFilePath(self):
         return self.path["BaggedUserMetricsFilePath"]
+
+
         

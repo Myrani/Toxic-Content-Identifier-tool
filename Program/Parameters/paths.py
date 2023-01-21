@@ -13,6 +13,7 @@
 paths = {"RawUserMetricsFilePath":"Results/UsersMetrics/RawUserMetrics/",
         "BaggedUserMetricsFilePath":"Results/UsersMetrics/BaggedUserMetrics/",
         "RawPostsFilePath":"Results/Posts/RawPosts/",
+        "DoneRawPostsFilePath":"Results/Posts/DoneRawPosts/",
         "LabeledPostsFilePath":"Results/Posts/LabeledPosts/",
         "BagOfWordsFilePath":"Results/Posts/BagOfWords/",
         "RefinedPostsFilePath":"Results/Posts/RefinedPosts/",
