@@ -31,16 +31,7 @@ class DataLabeler():
         comment["Label"] = self._askForOpinion(comment["body"])
         for reply in comment["replies"]:
             self._fetchNextStringToLabel(reply)
-
-    def _moveRawPostOnceLabeled(self,postOld,postNew):
-        """
-
-            Function used to archive a RawPost once it has been labeled
-        
-        """
-        
-        print("MOOOVE")
-        shutil.move( postOld, postNew)
+       
 
     def _labelPost(self,post):
         """
