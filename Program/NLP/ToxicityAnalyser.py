@@ -21,7 +21,7 @@ class ToxicityAnalyser():
         # Basic info setup 
         self.pathHandler = PathHandler()
         self.accountExplorer = AccountExplorer(reddit=reddit)
-        
+        self.reddit = reddit
         # PlaceHolder 
         self.classifier = None
         self.loadedFile = None
@@ -78,6 +78,39 @@ class ToxicityAnalyser():
         """
         return nltk.word_tokenize(comment)
 
+    def _fetchReplies(self, comment):
+        """
+            Internal function used to fetch comments in a Depth First manners .
+        """
+        try:
+            commentDict = {"commentId": comment.id, "author": comment.author.name,
+                           "body": self._tokenizeComment(comment.body), "score": comment.score, "replies": []}
+
+            if comment.replies:
+                for reply in comment.replies:
+                    commentDict["replies"].append(self._fetchReplies(reply))
+
+            return commentDict
+        except Exception as e:
+            pass
+
+    def convertSubmissionToJSON(self, submission):
+        """
+            Convert a reddit submission comments into a JSON object
+
+        """
+
+        post = {"title": submission.title, "author": submission.author.name, "score": submission.score,
+                "id": submission.id, "url": submission.url, "content": self._tokenizeComment(submission.selftext), "comments": []}
+        submission.comments.replace_more(limit=0)
+        comment_queue = submission.comments[:]  # Seed with top-level
+
+        while comment_queue:
+            comment = comment_queue.pop(0)
+            post["comments"].append(self._fetchReplies(comment))
+
+        return post
+
 
 
     def _convertRawUserMetricsToBagOfWords(self,username):
@@ -112,6 +145,9 @@ class ToxicityAnalyser():
         
         return bag
     
+    ### Different version of naive bayes depending of the passed format 
+
+
     def naiveBayes_overProfile(self,baggedUserProfile):
         """
             Operates a naive bayes over a bag of words passed in argument with the loaded classifier
@@ -133,7 +169,7 @@ class ToxicityAnalyser():
         return results
 
 
-    def naiveBayes_overPost(self,baggedUserPost):
+    def naiveBayes_overPost_Bagged(self,baggedUserPost):
         """
             Operates a naive bayes over a bag of words passed in argument with the loaded classifier
 
@@ -153,3 +189,77 @@ class ToxicityAnalyser():
                     return results
         
         return results
+
+    def naiveBayes_overPost(self,baggedUserPost):
+        """
+            Operates a naive bayes over a bag of words passed in argument with the loaded classifier
+        """    
+
+        results = dict.fromkeys(self.priors,1.0)
+
+        for word,count in baggedUserPost.items(): 
+            
+            for prior in results.keys():
+                if word in self.classifier[prior]:
+                    results[prior] = results[prior] * self.priors[prior] * ( (count + 1) / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedUserPost.keys())))))
+                else:
+                     results[prior] = results[prior] * self.priors[prior] * ( 1 / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedUserPost.keys())))))
+                
+                if results[prior] == 0:
+                    return results
+        
+        return results
+
+    def naiveBayes_overComment(self,baggedContent):
+        """
+            Operates a naive bayes over a bag of words passed in argument with the loaded classifier
+
+        """    
+
+        results = dict.fromkeys(self.priors,1.0)
+
+        for key in results:
+            results[key] = self.priors[key]
+
+        for word in baggedContent: 
+            
+            for prior in results.keys():
+                if word in self.classifier[prior]:
+                    results[prior] = results[prior] * ( (self.classifier[prior][word] + 1) / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedContent)))))
+                else:
+                     results[prior] = results[prior] * ( 1 / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedContent)))))
+                
+                if results[prior] == 0:
+                    return results
+        
+        if results["Toxic"] > results["Not Toxic"]:
+            self._toxicityFlagging(baggedContent)
+
+
+    def _toxicityFlagging(self,comment):
+        print("Toxicity identified",comment)
+
+    def _judgeNextDeepness(self,commentStructure):
+        if commentStructure:
+            self.naiveBayes_overComment(commentStructure["body"])
+        
+            if commentStructure["replies"]:
+                for comment in commentStructure["replies"]:
+                    self._judgeNextDeepness(comment)
+
+
+    def judgeToxicContent_OverCurrentSubreddit(self,subbredditName):
+        
+        subreddit = self.reddit.subreddit(subbredditName)
+        cpt = 0
+
+        for submission in subreddit.new(limit=100):
+            cpt+=1
+            print(cpt)    
+            post = self.convertSubmissionToJSON(submission)
+            
+            self.naiveBayes_overComment(post["content"])
+
+            if post["comments"]:
+                for comment in post["comments"]:
+                    self._judgeNextDeepness(comment)

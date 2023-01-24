@@ -10,6 +10,8 @@ reddit = praw.Reddit(
 )
 
 
-analyer = ToxicityAnalyser("Classifier_0.json",reddit)
+analyer = ToxicityAnalyser(reddit)
+analyer.loadSpecifiedClassifier("Classifier_2_modified.json")
 
-analyer._judgeUseretrics("Myrani")
+
+analyer.judgeToxicContent_OverCurrentSubreddit("leagueoflegends")

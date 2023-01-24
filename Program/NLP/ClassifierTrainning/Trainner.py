@@ -139,7 +139,17 @@ class Trainner():
             print("Recall",recall)
             print("F1",F1Measure)
             print(self.classifier["priors"])
-            
 
-        return result
+        self.classifier["title"] = self.classifier["title"] + "_modified"
 
+        self._dumpClassiferToJSON(self.classifier)
+
+    def _dumpClassiferToJSON(self,classifier):
+                
+        """
+            Internal function used to create a JSON file from Raw JSON post
+        """
+        name = self.pathHandler.getClassifiersPath()+classifier["title"]+""".json"""
+        
+        with open(name, 'w') as outfile:
+            json.dump(classifier, outfile)

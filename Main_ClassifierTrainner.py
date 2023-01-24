@@ -11,6 +11,6 @@ reddit = praw.Reddit(
 
 trainner = Trainner(reddit)
 
-trainner.loadClassifier("Classifier_1.json")
+trainner.loadClassifier("Classifier_2.json")
 trainner.addListOfGroundTruth_FromLabelisedFolder()
 print(trainner.loopTests())
