@@ -14,4 +14,5 @@ analyer = ToxicityAnalyser(reddit)
 analyer.loadSpecifiedClassifier("Classifier_2_modified.json")
 
 
-analyer.judgeToxicContent_OverCurrentSubreddit("leagueoflegends")
+#analyer.judgeToxicContent_OverCurrentSubreddit_withLimit("leagueoflegends",limit=100)
+analyer.judgeToxicContent_SubscribeToSubredditComments("leagueoflegends")

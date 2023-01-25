@@ -225,15 +225,14 @@ class ToxicityAnalyser():
             
             for prior in results.keys():
                 if word in self.classifier[prior]:
-                    results[prior] = results[prior] * ( (self.classifier[prior][word] + 1) / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedContent)))))
+                    results[prior] = results[prior] * ( (self.classifier[prior][word] + 1) / (len(self.uniqueWordsSet.union(set(baggedContent)))))
                 else:
-                     results[prior] = results[prior] * ( 1 / (self.lexiconSize + len(self.uniqueWordsSet.union(set(baggedContent)))))
+                     results[prior] = results[prior] * ( 1 / (len(self.uniqueWordsSet.union(set(baggedContent)))))
                 
                 if results[prior] == 0:
                     return results
         
-        if results["Toxic"] > results["Not Toxic"]:
-            self._toxicityFlagging(baggedContent)
+        return results
 
 
     def _toxicityFlagging(self,comment):
@@ -241,21 +240,21 @@ class ToxicityAnalyser():
 
     def _judgeNextDeepness(self,commentStructure):
         if commentStructure:
-            self.naiveBayes_overComment(commentStructure["body"])
-        
+            results = self.naiveBayes_overComment(commentStructure["body"])
+            if results["Toxic"] > results["Not Toxic"]:
+                self._toxicityFlagging((commentStructure["author"],commentStructure["body"]))
+
             if commentStructure["replies"]:
                 for comment in commentStructure["replies"]:
                     self._judgeNextDeepness(comment)
 
 
-    def judgeToxicContent_OverCurrentSubreddit(self,subbredditName):
+    def judgeToxicContent_OverCurrentSubreddit_withLimit(self,subbredditName,limit=100):
         
         subreddit = self.reddit.subreddit(subbredditName)
-        cpt = 0
 
-        for submission in subreddit.new(limit=100):
-            cpt+=1
-            print(cpt)    
+        for submission in subreddit.new(limit=limit):
+            
             post = self.convertSubmissionToJSON(submission)
             
             self.naiveBayes_overComment(post["content"])
@@ -263,3 +262,29 @@ class ToxicityAnalyser():
             if post["comments"]:
                 for comment in post["comments"]:
                     self._judgeNextDeepness(comment)
+
+    def judgeToxicContent_SubscribeToSubredditSubmissions(self,subbredditName):
+        """
+        
+            Function subscribing the analyser to a submission stream of a subreddit, and judge each new posts
+            TO DO 
+        
+        """   
+        subreddit = self.reddit.subreddit(subbredditName)
+        submission_stream = subreddit.stream.submissions(pause_after=-1)
+
+
+    def judgeToxicContent_SubscribeToSubredditComments(self,subbredditName):
+        """
+        
+            Function subscribing the analyser to a comment stream of a subreddit, and judge each new comments
+        
+        """
+        subreddit = self.reddit.subreddit(subbredditName)
+        comment_stream = subreddit.stream.comments(pause_after=-1)
+
+        for comment in comment_stream:
+            if comment:
+                results = self.naiveBayes_overComment(self._tokenizeComment(comment.body))
+                if results["Toxic"] > results["Not Toxic"]:
+                    self._toxicityFlagging((comment.author,comment.body))

@@ -4,6 +4,7 @@ from os.path import isfile, join
 import json
 from Program.Utils.PathHandler import PathHandler
 from Program.NLP.ToxicityAnalyser import ToxicityAnalyser
+
 class Trainner():
     
     def __init__(self,reddit) -> None:
@@ -102,15 +103,26 @@ class Trainner():
 
         return resultMatrix
 
-    def scaleUpClassifierToxicity(self):
-        
+    def scaleUpClassifierToxicity(self,scaleFactor):
+
+        """
+            Function to manually change the Toxic word frequency of a classifier 
+                
+        """
+
         for word,count in self.classifier["classifier"]["Toxic"].items():
-            self.classifier["classifier"]["Toxic"][word] = count * 1.10
+            self.classifier["classifier"]["Toxic"][word] = count * scaleFactor
 
         self.toxicityAnalyser.classifier =self.classifier["classifier"]
 
     def priorsBalancing(self,addToNotToxic,addToToxic):
-        
+
+        """
+            Function to manually change the priors of a classifier
+
+        """
+
+
         self.classifier["priors"]["Not Toxic"] = self.classifier["priors"]["Not Toxic"] + addToNotToxic
         self.classifier["priors"]["Toxic"] = self.classifier["priors"]["Toxic"] + addToToxic
 
@@ -126,7 +138,7 @@ class Trainner():
 
         while F1Measure < 0.97:
             
-            self.scaleUpClassifierToxicity()
+            self.scaleUpClassifierToxicity(0.10)
             self.priorsBalancing(-0.05,0.05)
 
             result = self.startClassifierTest()
