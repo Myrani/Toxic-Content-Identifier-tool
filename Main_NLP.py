@@ -8,6 +8,6 @@ postBagger = PostBagger()
 classifierGenerator = ClassifierGenerator()
 
 
-postRefiner.refineAllLabelisedPosts()
-postBagger.bagAllRefinedPosts()
-classifierGenerator.generateClassifierFromAllBags()
+postRefiner.refineAllLabelisedPosts() # In charge of transforming a labeled post or comment into a sequence of tokens (refined post)
+postBagger.bagAllRefinedPosts() # In Charge of transforming a refined post into a bag of words structure 
+classifierGenerator.generateClassifierFromAllBags() # In charge of generating a classifier with all the bag of words available

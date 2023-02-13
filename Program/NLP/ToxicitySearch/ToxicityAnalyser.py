@@ -1,5 +1,6 @@
 import random
 from Program.Utils.PathHandler import PathHandler
+from Program.NLP.ToxicitySearch.ToxicityAnalyserDataHandler import ToxicityNanlyserDataHandler
 from Program.Parameters.paths import paths
 from Program.RedditExplorer.AccountExplorer import AccountExplorer
 import json
@@ -21,6 +22,7 @@ class ToxicityAnalyser():
         # Basic info setup 
         self.pathHandler = PathHandler()
         self.accountExplorer = AccountExplorer(reddit=reddit)
+        self.dataHandler = ToxicityNanlyserDataHandler()
         self.reddit = reddit
         # PlaceHolder 
         self.classifier = None
@@ -196,7 +198,10 @@ class ToxicityAnalyser():
         """    
 
         results = dict.fromkeys(self.priors,1.0)
-
+        
+        for key in results:
+            results[key] = self.priors[key]
+        
         for word,count in baggedUserPost.items(): 
             
             for prior in results.keys():
@@ -215,7 +220,6 @@ class ToxicityAnalyser():
             Operates a naive bayes over a bag of words passed in argument with the loaded classifier
 
         """    
-
         results = dict.fromkeys(self.priors,1.0)
 
         for key in results:
@@ -236,9 +240,21 @@ class ToxicityAnalyser():
 
 
     def _toxicityFlagging(self,comment):
+        """
+            Function called when a content is flagged as toxic 
+        
+        """
+        
         print("Toxicity identified",comment)
+        self.dataHandler.dumpToxicCommentToListJSON(comment)
 
     def _judgeNextDeepness(self,commentStructure):
+        
+        """
+            Propagate the toxicity search to the next comments of the passed structure
+
+        """
+
         if commentStructure:
             results = self.naiveBayes_overComment(commentStructure["body"])
             if results["Toxic"] > results["Not Toxic"]:
@@ -250,7 +266,9 @@ class ToxicityAnalyser():
 
 
     def judgeToxicContent_OverCurrentSubreddit_withLimit(self,subbredditName,limit=100):
-        
+        """
+            Function to judge the next last X chosen post of a subreddit 
+        """
         subreddit = self.reddit.subreddit(subbredditName)
 
         for submission in subreddit.new(limit=limit):
@@ -272,6 +290,14 @@ class ToxicityAnalyser():
         """   
         subreddit = self.reddit.subreddit(subbredditName)
         submission_stream = subreddit.stream.submissions(pause_after=-1)
+        
+        for submission in submission_stream:
+            if submission:
+                if self._tokenizeComment(submission.selftext):
+                    results = self.naiveBayes_overComment(self._tokenizeComment(submission.selftext))
+                    if results["Toxic"] > results["Not Toxic"]:
+                        self._toxicityFlagging((submission.author.name,submission.selftext))
+
 
 
     def judgeToxicContent_SubscribeToSubredditComments(self,subbredditName):
@@ -287,4 +313,5 @@ class ToxicityAnalyser():
             if comment:
                 results = self.naiveBayes_overComment(self._tokenizeComment(comment.body))
                 if results["Toxic"] > results["Not Toxic"]:
-                    self._toxicityFlagging((comment.author,comment.body))
+                    self._toxicityFlagging((comment.author.name,comment.body))
+

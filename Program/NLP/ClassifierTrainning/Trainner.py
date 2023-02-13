@@ -3,7 +3,7 @@ from os import listdir
 from os.path import isfile, join
 import json
 from Program.Utils.PathHandler import PathHandler
-from Program.NLP.ToxicityAnalyser import ToxicityAnalyser
+from Program.NLP.ToxicitySearch.ToxicityAnalyser import ToxicityAnalyser
 
 class Trainner():
     
@@ -54,14 +54,22 @@ class Trainner():
                 self.addGroundTruthPost(data)
         
     def _getClassifierPrecision(self,resultMatrix):
-
+        """
+            Returns the precision of classifier over a test data set
+        """
         return resultMatrix["truePositive"] / (resultMatrix["truePositive"] + resultMatrix["falsePositive"]+ 0.0001)
 
     def _getClassifierRecall(self,resultMatrix):
-
+        """
+            Returns the recall of classifier over a test data set
+        """
         return resultMatrix["truePositive"] / (resultMatrix["truePositive"] + resultMatrix["falseNegative"]+0.0001)
 
     def _getClassifierF1Measure(self,resultMatrix):
+
+        """
+            Returns the F1 measure of classifier over a test data set
+        """
         precision = self._getClassifierPrecision(resultMatrix)
         recall = self._getClassifierRecall(resultMatrix)
         
@@ -130,7 +138,10 @@ class Trainner():
 
 
     def loopTests(self):
+        """
+            Upscale toxic content until a minimum F1 measure of 0.97 is reached
         
+        """
         result = self.startClassifierTest()
         precision = self._getClassifierPrecision(result)
         recall = self._getClassifierRecall(result)

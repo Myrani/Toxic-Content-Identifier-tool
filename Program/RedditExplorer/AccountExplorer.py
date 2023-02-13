@@ -13,6 +13,12 @@ class AccountExplorer():
 
     def harvestUserMetrics(self,username):
 
+        """
+        
+            Harvest all users posts and comments 
+        
+        """
+
         currentUserMetrics = {"username":username,"comments":{},"posts":{}} 
         
         commentList = self._getAllUserCommentsIds(username)

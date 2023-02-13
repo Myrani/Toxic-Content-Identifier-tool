@@ -6,7 +6,7 @@ import random
 
 class DataLabeler():
     """
-        Used to label post with the sentiment Very bullish, bullish, neutral, bearish, very bearish
+        Used to label post with the sentiment 
     """
 
 

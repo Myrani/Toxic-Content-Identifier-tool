@@ -19,5 +19,6 @@ paths = {"RawUserMetricsFilePath":"Results/UsersMetrics/RawUserMetrics/",
         "RefinedPostsFilePath":"Results/Posts/RefinedPosts/",
         "ClassifiersFilePath":"Results/Classifiers/",
         "ParametersFileFilePath":"Program/Parameters/",
-        "LabelSetsFileFilePath":"Program/Parameters/LabelSets/"}
+        "LabelSetsFileFilePath":"Program/Parameters/LabelSets/",
+        "ToxicFlaggedContentsFilePath":"Results/ToxicFlaggedContents/"}
 

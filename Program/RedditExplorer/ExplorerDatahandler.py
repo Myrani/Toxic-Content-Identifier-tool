@@ -8,6 +8,11 @@ from Program.Utils.WindowsNamingConventionsHandler import WindowsNamingConventio
 
 class ExplorerDataHandler():
     def __init__(self) -> None:
+
+        """
+            Handles the saving/reading/loadings interactions  
+        
+        """
         self.pathHandler = PathHandler()
         self.namingHandler = WindowsNamingConventionsHandler()
     

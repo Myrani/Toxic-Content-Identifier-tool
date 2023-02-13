@@ -18,7 +18,7 @@ class ClassifierGenerator():
             Internal function used to get all bags of words in the BagOfWords Folder 
         
         """
-        print(os.listdir(self.pathHandler.getBagOfWordsPath()))
+        #print(os.listdir(self.pathHandler.getBagOfWordsPath()))
         return os.listdir(self.pathHandler.getBagOfWordsPath())
 
     def _getAllClassifiers(self):
@@ -88,7 +88,8 @@ class ClassifierGenerator():
         for bag in self._getAllBagOfWords():
             loadedBag = self._loadRefinedBag(bag)
             for label,words in loadedBag["content"].items() :
-                print(label,words)
+                #print(label,words)
+                
                 if label != "title":
                     if label not in classifier:
                         classifier[label] = {}

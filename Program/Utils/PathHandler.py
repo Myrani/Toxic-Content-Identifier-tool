@@ -40,5 +40,8 @@ class PathHandler():
     def getBaggedUserMetricsFilePath(self):
         return self.path["BaggedUserMetricsFilePath"]
 
+    def getToxicFlaggedContentsFilePath(self):
+        return self.path["ToxicFlaggedContentsFilePath"]
+
 
         

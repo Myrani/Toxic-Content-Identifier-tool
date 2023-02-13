@@ -14,7 +14,7 @@ class PostRefiner():
 
         self.pathHandler = PathHandler()
         self.namingConventionsHandler = WindowsNamingConventionsHandler()
-
+        self.commentCounter = 0
     def loadRawPost(self,name):
         """
             Loads a post from Raw Post
@@ -36,6 +36,7 @@ class PostRefiner():
             Transforms into a list of token a given string
         
         """
+        self.commentCounter += 1
         return nltk.word_tokenize(comment)
 
     def tokenizeLabelizedPost(self,labeledPost):
@@ -96,7 +97,7 @@ class PostRefiner():
         for post in self._getAllLabeledPosts():
             self.tokenizeLabelizedPost(self.loadLabeledPost(post))
 
-
+        print("Total comments refined : ",self.commentCounter)
     
 
 
