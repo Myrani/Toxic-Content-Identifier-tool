@@ -4,7 +4,7 @@ class AccountExplorer():
 
     def __init__(self,reddit) -> None:
         """
-            Initialisation of the Account explorer
+            Initialisation of the Account explorer // Scraped part 
         
         
         """

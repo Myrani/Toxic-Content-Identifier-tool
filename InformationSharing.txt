@@ -1,3 +1,0 @@
-Générer des identifiants pour bot : https://www.geeksforgeeks.org/how-to-get-client_id-and-client_secret-for-python-reddit-api-registration/
-
-Structure de l'api PRAW : https://praw.readthedocs.io/en/stable/code_overview/praw_models.html

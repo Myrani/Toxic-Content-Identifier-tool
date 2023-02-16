@@ -12,14 +12,6 @@ class DataLabeler():
 
     def __init__(self,pathHandler) -> None:
         self.pathHandler = pathHandler
-
-
-    def _askForOpinion(self,string):
-        """
-            Function to ask the sentiment of the post and it's replies
-        """
-
-        return int(input("How's this ?"))
         
 
     def _fetchNextStringToLabel(self,comment):

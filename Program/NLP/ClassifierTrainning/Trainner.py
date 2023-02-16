@@ -4,7 +4,9 @@ from os.path import isfile, join
 import json
 from Program.Utils.PathHandler import PathHandler
 from Program.NLP.ToxicitySearch.ToxicityAnalyser import ToxicityAnalyser
-
+from Program.NLP.ClassifierTrainning.TrainnerDataHandler import TrainnerDataHandler
+from Program.NLP.LabelPipeline.PostRefiner import PostRefiner
+from Program.NLP.LabelPipeline.PostBagger import PostBagger
 class Trainner():
     
     def __init__(self,reddit) -> None:
@@ -12,11 +14,14 @@ class Trainner():
             Class in charge of the classifier's trainning tools and evaluations metrics
 
         """
-
+    
         self.groundTruth = {"Not Toxic":[],"Toxic":[]}
         self.classifier = None
         self.pathHandler = PathHandler()
         self.toxicityAnalyser = ToxicityAnalyser(reddit)
+        self.dataHandler = TrainnerDataHandler()
+        self.postRefiner = PostRefiner()
+        self.postBagger = PostBagger()
 
     def loadClassifier(self,classifierFileName):
         """
@@ -42,7 +47,7 @@ class Trainner():
     def addListOfGroundTruth_FromLabelisedFolder(self):
         """
         
-            Loads every posts present in the LabelisedPost folder
+            Loads every posts present in the LabelisedPost folder as ground truths to test the classifier
         
         """
 
@@ -52,7 +57,24 @@ class Trainner():
             with open(self.pathHandler.getBagOfWordsPath()+post) as file :
                 data = json.load(file)
                 self.addGroundTruthPost(data)
+
+    def fectchNextDayContent_RawPosts(self):
         
+        """
+        
+            Fetch a new day Raw posts contents            
+        
+        """
+
+        return self.dataHandler.fetchRawPosts_NewDay()
+
+
+
+    
+
+    
+
+
     def _getClassifierPrecision(self,resultMatrix):
         """
             Returns the precision of classifier over a test data set
@@ -137,7 +159,46 @@ class Trainner():
         self.toxicityAnalyser.priors =self.classifier["priors"]
 
 
-    def loopTests(self):
+    def _fetchDeeperComments(self,commentStructure):
+        
+        results = self.toxicityAnalyser.naiveBayes_overComment(commentStructure["body"])
+        
+        if results["Toxic"] > results["Not Toxic"]:
+            self.toxicityAnalyser._toxicityFlagging((commentStructure["author"],commentStructure["body"]))
+
+        if commentStructure["replies"]:
+            for comment in commentStructure["replies"]:
+           
+                self._fetchDeeperComments(comment)
+
+    def startNaiveBayesOverPost(self,post):
+
+
+        if post["content"]:
+
+            results = self.toxicityAnalyser.naiveBayes_overComment(post["content"]["body"])
+
+            if results["Toxic"] > results["Not Toxic"]:
+                self.toxicityAnalyser._toxicityFlagging((post["author"],post["body"]))
+
+            if post["content"]["comments"]:
+                for comment in post["content"]["comments"] :
+                
+                    self._fetchDeeperComments(comment)
+
+    def testClassifier_OverCurrentRawPosts(self):
+        """
+            Test the current classifier over the RawPosts present
+        
+        """
+        for post in self.fectchNextDayContent_RawPosts():
+            data = open(post)
+            loadedRawPost = (json.load(data))
+            tokenisedRawPost = self.postRefiner.refineARawPost(loadedRawPost)
+            self.startNaiveBayesOverPost(tokenisedRawPost)
+
+
+    def loopTests_UpscaleToxicContent(self):
         """
             Upscale toxic content until a minimum F1 measure of 0.97 is reached
         

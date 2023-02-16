@@ -215,6 +215,7 @@ class ToxicityAnalyser():
         
         return results
 
+
     def naiveBayes_overComment(self,baggedContent):
         """
             Operates a naive bayes over a bag of words passed in argument with the loaded classifier
@@ -235,7 +236,7 @@ class ToxicityAnalyser():
                 
                 if results[prior] == 0:
                     return results
-        
+        print(results)
         return results
 
 
