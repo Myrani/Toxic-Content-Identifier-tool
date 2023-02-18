@@ -12,7 +12,9 @@ reddit = praw.Reddit(
 trainner = Trainner(reddit)
 
 trainner.loadClassifier("Classifier_2.json") # Loads a classifier to train
-#trainner.addListOfGroundTruth_FromLabelisedFolder() # Adds all labeled posts as ground truth data
-#trainner.loopTests_UpscaleToxicContent() # Starts scaling up toxic contents 
 
-print(trainner.testClassifier_OverCurrentRawPosts())
+#trainner.addListOfGroundTruth_FromLabelisedFolder() # Adds all labeled posts as ground truth data, needed for the LoopTestFunction 
+
+#trainner.loopTests_UpscaleToxicContent() # Starts scaling up toxic contents,old overview method
+
+# trainner.testClassifier_OverCurrentRawPosts() # Test the reaction of the loaded classifier over the current available crawled raw data

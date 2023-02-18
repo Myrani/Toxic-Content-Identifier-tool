@@ -2,6 +2,8 @@ from Program.Utils.PathHandler import PathHandler
 from Program.Parameters.paths import paths
 import os
 import json
+import random
+
 
 class ClassifierGenerator():
     
@@ -77,6 +79,8 @@ class ClassifierGenerator():
             Returns : None
 
         """
+        
+        # Setting up main variables
 
         file = {}
         classifier = {}
@@ -84,6 +88,10 @@ class ClassifierGenerator():
 
         bufferUniqueWordsList = []
         bufferLexiconSize = 0
+
+
+
+
 
         for bag in self._getAllBagOfWords():
             loadedBag = self._loadRefinedBag(bag)
@@ -107,6 +115,82 @@ class ClassifierGenerator():
                             bufferLexiconSize += 1
         
         
+        file["title"] = "Classifier_"+str(len(self._getAllClassifiers()))
+        
+        file["classifier"] = classifier
+        file["priors"] = self._determinePriors(priors)
+        file["uniqueWords"] = list(set(bufferUniqueWordsList))
+        file["lexiconSize"] = bufferLexiconSize
+
+        self._dumpClassiferToJSON(file)
+
+    def generateClassifierFromAllBags_WithToxicityUpScaleFactor(self,upscaleFactor = 0.1):
+
+        """
+            Master Function
+            Generates a Classifier from all available BagOfWords
+        
+            Args : None 
+
+            Returns : None
+
+        """
+
+        # Setting up main variables
+
+
+        file = {}
+        classifier = {}
+        priors = {}
+
+        bufferUniqueWordsList = []
+        bufferLexiconSize = 0
+
+
+        # Toxicity scale up variables
+
+        toxiContentBuffer = []
+
+
+        for bag in self._getAllBagOfWords():
+            loadedBag = self._loadRefinedBag(bag)
+            for label,words in loadedBag["content"].items() :
+                
+                if label == "Toxic":
+                    toxiContentBuffer.append(words)
+                if label != "title":
+                    if label not in classifier:
+                        classifier[label] = {}
+                        priors[label] = 0
+                    
+                    priors[label] = priors[label] + 1
+                    for word,count in words.items():
+                        if word not in classifier[label]:
+                            classifier[label][word] = count
+                            bufferUniqueWordsList.append(word)
+                            bufferLexiconSize += 1
+                        else:
+                            classifier[label][word] = classifier[label][word] + count
+                            bufferUniqueWordsList.append(word)
+                            bufferLexiconSize += 1
+        
+        
+        selectedToxicity = random.sample(toxiContentBuffer,int((priors["Toxic"]+priors["Not Toxic"])*upscaleFactor))
+
+  
+        for bag in selectedToxicity:
+            priors["Toxic"] = priors["Toxic"] + 1
+            for word,count in bag.items():
+                if word not in classifier[label]:
+                    classifier["Toxic"][word] = count
+                    bufferUniqueWordsList.append(word)
+                    bufferLexiconSize += 1
+                else:
+                    classifier["Toxic"][word] = classifier["Toxic"][word] + count
+                    bufferLexiconSize += 1
+
+        print("Current contents",priors["Toxic"]+priors["Not Toxic"])
+
         file["title"] = "Classifier_"+str(len(self._getAllClassifiers()))
         
         file["classifier"] = classifier

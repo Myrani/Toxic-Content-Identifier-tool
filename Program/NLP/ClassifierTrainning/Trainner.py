@@ -7,6 +7,8 @@ from Program.NLP.ToxicitySearch.ToxicityAnalyser import ToxicityAnalyser
 from Program.NLP.ClassifierTrainning.TrainnerDataHandler import TrainnerDataHandler
 from Program.NLP.LabelPipeline.PostRefiner import PostRefiner
 from Program.NLP.LabelPipeline.PostBagger import PostBagger
+from Program.NLP.LabelPipeline.ClassifierGenerator import ClassifierGenerator
+
 class Trainner():
     
     def __init__(self,reddit) -> None:
@@ -22,6 +24,7 @@ class Trainner():
         self.dataHandler = TrainnerDataHandler()
         self.postRefiner = PostRefiner()
         self.postBagger = PostBagger()
+        self.classifierGenerator = ClassifierGenerator()
 
     def loadClassifier(self,classifierFileName):
         """
@@ -70,9 +73,6 @@ class Trainner():
 
 
 
-    
-
-    
 
 
     def _getClassifierPrecision(self,resultMatrix):

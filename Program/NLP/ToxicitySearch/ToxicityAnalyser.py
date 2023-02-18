@@ -1,6 +1,6 @@
 import random
 from Program.Utils.PathHandler import PathHandler
-from Program.NLP.ToxicitySearch.ToxicityAnalyserDataHandler import ToxicityNanlyserDataHandler
+from Program.NLP.ToxicitySearch.ToxicityAnalyserDataHandler import ToxicityAnalyserDataHandler
 from Program.Parameters.paths import paths
 from Program.RedditExplorer.AccountExplorer import AccountExplorer
 import json
@@ -22,7 +22,7 @@ class ToxicityAnalyser():
         # Basic info setup 
         self.pathHandler = PathHandler()
         self.accountExplorer = AccountExplorer(reddit=reddit)
-        self.dataHandler = ToxicityNanlyserDataHandler()
+        self.dataHandler = ToxicityAnalyserDataHandler()
         self.reddit = reddit
         # PlaceHolder 
         self.classifier = None
@@ -236,7 +236,7 @@ class ToxicityAnalyser():
                 
                 if results[prior] == 0:
                     return results
-        print(results)
+                
         return results
 
 
