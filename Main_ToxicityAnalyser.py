@@ -12,6 +12,6 @@ reddit = praw.Reddit(
 
 analyer = ToxicityAnalyser(reddit)
 
-analyer.loadSpecifiedClassifier("Classifier_2_modified.json") # Loads a given classifer to analyse new contents with 
+analyer.loadSpecifiedClassifier("Classifier_1_modified.json") # Loads a given classifer to analyse new contents with 
  
 analyer.judgeToxicContent_SubscribeToSubredditComments("DotA2") # Subscribe to a subreddit new comments stream
