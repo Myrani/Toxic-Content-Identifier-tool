@@ -11,9 +11,7 @@ reddit = praw.Reddit(
 
 
 analyer = ToxicityAnalyser(reddit)
-analyer.loadSpecifiedClassifier("Classifier_2_modified.json")
 
-
-#analyer.judgeToxicContent_OverCurrentSubreddit_withLimit("leagueoflegends",limit=100)
-analyer.judgeToxicContent_SubscribeToSubredditComments("leagueoflegends")
-#analyer.judgeToxicContent_SubscribeToSubredditSubmissions("leagueoflegends")
+analyer.loadSpecifiedClassifier("Classifier_2_modified.json") # Loads a given classifer to analyse new contents with 
+ 
+analyer.judgeToxicContent_SubscribeToSubredditComments("DotA2") # Subscribe to a subreddit new comments stream

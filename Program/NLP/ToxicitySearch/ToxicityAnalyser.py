@@ -1,6 +1,6 @@
 import random
 from Program.Utils.PathHandler import PathHandler
-from Program.NLP.ToxicitySearch.ToxicityAnalyserDataHandler import ToxicityNanlyserDataHandler
+from Program.NLP.ToxicitySearch.ToxicityAnalyserDataHandler import ToxicityAnalyserDataHandler
 from Program.Parameters.paths import paths
 from Program.RedditExplorer.AccountExplorer import AccountExplorer
 import json
@@ -22,7 +22,7 @@ class ToxicityAnalyser():
         # Basic info setup 
         self.pathHandler = PathHandler()
         self.accountExplorer = AccountExplorer(reddit=reddit)
-        self.dataHandler = ToxicityNanlyserDataHandler()
+        self.dataHandler = ToxicityAnalyserDataHandler()
         self.reddit = reddit
         # PlaceHolder 
         self.classifier = None
@@ -45,6 +45,15 @@ class ToxicityAnalyser():
 
         self._setUpClassifier()
 
+    def _reloadSpecifiedClassifier(self,file):
+        """
+            Loads a classifier file passed 
+            
+        """
+        
+        self.loadedFile =  file
+
+        self._setUpClassifier()
 
     
     def _judgeUseretrics(self,username):
@@ -215,6 +224,7 @@ class ToxicityAnalyser():
         
         return results
 
+
     def naiveBayes_overComment(self,baggedContent):
         """
             Operates a naive bayes over a bag of words passed in argument with the loaded classifier
@@ -235,7 +245,7 @@ class ToxicityAnalyser():
                 
                 if results[prior] == 0:
                     return results
-        
+                
         return results
 
 

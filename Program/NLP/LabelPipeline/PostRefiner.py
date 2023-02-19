@@ -15,6 +15,7 @@ class PostRefiner():
         self.pathHandler = PathHandler()
         self.namingConventionsHandler = WindowsNamingConventionsHandler()
         self.commentCounter = 0
+    
     def loadRawPost(self,name):
         """
             Loads a post from Raw Post
@@ -99,11 +100,37 @@ class PostRefiner():
 
         print("Total comments refined : ",self.commentCounter)
     
+    def _fetchNextCommentToTokenise(self,comment):
+        
+        if comment: 
+            tokenizedComment = {"body":self._tokenizeComment(comment["body"]),"author":comment["author"],"replies":[]}
+          
+            for comment in comment["replies"]:
+    
+                tokenizedComment["replies"].append(self._fetchNextCommentToTokenise(comment))
+    
+            return tokenizedComment
+        
+        return None
+    
+    def refineARawPost(self,rawpost):
+        
+        """
+
+            Refine a non-labeled post 
+        
+        """
+
+        tokenisedPost = {"title": rawpost["title"],"author":rawpost["author"],"content":None}
 
 
+        for comment in rawpost["comments"]:
+            if comment:
+                tokenisedPost["content"] = {"body":self._tokenizeComment(comment["body"]),"comments":[self._fetchNextCommentToTokenise(comment)]}
+                
 
 
-
+        return tokenisedPost
 
 
 

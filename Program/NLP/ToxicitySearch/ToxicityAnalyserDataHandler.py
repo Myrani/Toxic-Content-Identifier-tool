@@ -6,11 +6,11 @@ from Program.Utils.PathHandler import PathHandler
 from Program.Utils.WindowsNamingConventionsHandler import WindowsNamingConventionsHandler
 
 
-class ToxicityNanlyserDataHandler():
+class ToxicityAnalyserDataHandler():
     def __init__(self) -> None:
 
         """
-            Handles the saving/reading/loadings interactions  
+            Handles the saving/reading/loadings interactions for the ToxicityAnalyser
         
         """
         self.pathHandler = PathHandler()
