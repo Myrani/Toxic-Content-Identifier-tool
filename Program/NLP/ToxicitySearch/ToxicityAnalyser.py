@@ -45,6 +45,15 @@ class ToxicityAnalyser():
 
         self._setUpClassifier()
 
+    def _reloadSpecifiedClassifier(self,file):
+        """
+            Loads a classifier file passed 
+            
+        """
+        
+        self.loadedFile =  file
+
+        self._setUpClassifier()
 
     
     def _judgeUseretrics(self,username):

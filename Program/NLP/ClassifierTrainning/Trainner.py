@@ -37,6 +37,17 @@ class Trainner():
 
         self.toxicityAnalyser.loadSpecifiedClassifier(classifierFileName)
 
+    def _reloadClassifier(self,classifierFile):
+        """
+            Loads a classifier file into the trainner and the toxicity analyser    
+        
+        """
+
+        self.classifier = classifierFile
+
+        self.toxicityAnalyser._reloadSpecifiedClassifier(classifierFile)
+
+
     def addGroundTruthPost(self,BaggedPost):
         """
             Add a post into the ground truth disctionnary
@@ -198,7 +209,7 @@ class Trainner():
             self.startNaiveBayesOverPost(tokenisedRawPost)
 
 
-    def loopTests_UpscaleToxicContent(self):
+    def loopTests_UpscaleToxicContent_LazyOverview(self):
         """
             Upscale toxic content until a minimum F1 measure of 0.97 is reached
         
@@ -227,6 +238,49 @@ class Trainner():
         self.classifier["title"] = self.classifier["title"] + "_modified"
 
         self._dumpClassiferToJSON(self.classifier)
+
+
+    def loopTests_UpscaleToxicContent(self,upscaleStep):
+        """
+            Upscale toxic content until a minimum F1 measure of 0.97 is reached
+        
+        """
+        currentUpscaleFactor = upscaleStep
+        result = self.startClassifierTest()
+        precision = self._getClassifierPrecision(result)
+        recall = self._getClassifierRecall(result)
+        F1Measure = self._getClassifierF1Measure(result)
+
+        print("Result :",result)
+        print("Precision :",precision)
+        print("Recall",recall)
+        print("F1",F1Measure)
+        print(self.classifier["priors"])
+
+        while F1Measure < 0.97:
+            
+            upscaledClassifier = self.classifierGenerator.generateClassifierFromAllBags_WithToxicityUpScaleFactor(upscaleFactor=currentUpscaleFactor)
+            self._reloadClassifier(upscaledClassifier)
+
+            result = self.startClassifierTest()
+            precision = self._getClassifierPrecision(result)
+            recall = self._getClassifierRecall(result)
+            F1Measure = self._getClassifierF1Measure(result)
+
+            print("Result :",result)
+            print("Precision :",precision)
+            print("Recall",recall)
+            print("F1",F1Measure)
+            print(self.classifier["priors"])
+
+            currentUpscaleFactor += upscaleStep
+
+        self.classifier["title"] = self.classifier["title"] + "_modified"
+
+        self._dumpClassiferToJSON(self.classifier)
+
+
+
 
     def _dumpClassiferToJSON(self,classifier):
                 
