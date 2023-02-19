@@ -72,7 +72,7 @@ class ClassifierGenerator():
     def generateClassifierFromAllBags(self):
         """
             Master Function
-            Generates a Classifier from all available BagOfWords
+            Generates a base classifier file from all available BagOfWords, and dumps it into the classifier folder of our results part of the project.
         
             Args : None 
 
@@ -89,12 +89,12 @@ class ClassifierGenerator():
         bufferUniqueWordsList = []
         bufferLexiconSize = 0
 
-
+        # We load all the labeliled data available (in the BagOfWords folder)
         for bag in self._getAllBagOfWords():
             loadedBag = self._loadRefinedBag(bag)
+            # For each labels, we add the data to the classifier 
             for label,words in loadedBag["content"].items() :
-                #print(label,words)
-                
+
                 if label != "title":
                     if label not in classifier:
                         classifier[label] = {}
@@ -112,6 +112,7 @@ class ClassifierGenerator():
                             bufferLexiconSize += 1
         
         
+
         file["title"] = "Classifier_"+str(len(self._getAllClassifiers()))
         
         file["classifier"] = classifier
@@ -124,11 +125,11 @@ class ClassifierGenerator():
     def generateClassifierFromAllBags_WithToxicityUpScaleFactor(self,upscaleFactor = 0.1):
 
         """
-            Master Function
-            Generates a Classifier from all available BagOfWords, and upscale it with a default 10% total population before upscale factor.
+            
+            Generates a classifier with upscaled toxicity from all available BagOfWords from a base loaded classifer, and upscale it with a default 10% total population before upscale factor.
             the "upscaleFactor" argument Kwarg is available to change the default factor  
         
-            upscaleFactor : Float  
+            upscaleFactor : Float, change the default toxicity upscale factor    
 
             Returns : Classifier
 
@@ -197,7 +198,7 @@ class ClassifierGenerator():
 
             scaleUp = scaleUp - len(toxicContentBuffer)-1
 
-        # If we have a small enough upscaling, or the while loop left a small enough one we do one last pass 
+        # If we have a small enough upscaling for the random sampling, or the while loop left a small enough one we do one last pass 
 
         selectedToxicity = random.sample(toxicContentBuffer,scaleUp)
             

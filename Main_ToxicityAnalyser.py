@@ -3,6 +3,7 @@ import praw
 from Program.Parameters.Secrets import secrets
 
 
+# Initialisation of our reddit instance with our private id and key
 reddit = praw.Reddit(
     client_id=secrets["client_id"],
     client_secret=secrets["client_secret"],

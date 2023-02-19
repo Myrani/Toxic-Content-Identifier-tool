@@ -161,6 +161,12 @@ class Trainner():
         """
             Function to manually change the priors of a classifier
 
+            
+            args:
+                addToNotToxic :  Float, modify the current classifier  
+
+            returns None 
+
         """
 
 
@@ -171,7 +177,16 @@ class Trainner():
 
 
     def _fetchDeeperComments(self,commentStructure):
+        """
+            Recursive function to explore a comment tree structre 
+
+            args 
         
+        
+        """
+
+
+
         results = self.toxicityAnalyser.naiveBayes_overComment(commentStructure["body"])
         
         if results["Toxic"] > results["Not Toxic"]:
@@ -183,7 +198,13 @@ class Trainner():
                 self._fetchDeeperComments(comment)
 
     def startNaiveBayesOverPost(self,post):
+        """
+            Judge a post with the loaded classifier 
 
+            Args : 
+                post : post file
+        
+        """
 
         if post["content"]:
 

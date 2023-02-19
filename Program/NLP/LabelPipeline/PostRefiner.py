@@ -101,6 +101,19 @@ class PostRefiner():
         print("Total comments refined : ",self.commentCounter)
     
     def _fetchNextCommentToTokenise(self,comment):
+
+        """
+
+            Explore a comment tree structure to tokenise all the comments
+
+            args : 
+                comment : Comment Structure 
+
+            returns : 
+                None
+
+        
+        """
         
         if comment: 
             tokenizedComment = {"body":self._tokenizeComment(comment["body"]),"author":comment["author"],"replies":[]}
@@ -118,6 +131,12 @@ class PostRefiner():
         """
 
             Refine a non-labeled post 
+
+            args : 
+                rawpost : rawpost from the harvester
+            
+            returns : 
+                a refined post (tokenised sentences list)
         
         """
 

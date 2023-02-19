@@ -252,7 +252,12 @@ class ToxicityAnalyser():
     def _toxicityFlagging(self,comment):
         """
             Function called when a content is flagged as toxic 
-        
+
+            args : 
+                comment : (Tuple), username and toxic content to flag 
+            
+            returns :
+                None 
         """
         
         print("Toxicity identified",comment)
@@ -262,6 +267,13 @@ class ToxicityAnalyser():
         
         """
             Propagate the toxicity search to the next comments of the passed structure
+
+            args : 
+                comment, (Comment Structure)
+
+            returns :
+                None
+
 
         """
 
@@ -295,7 +307,12 @@ class ToxicityAnalyser():
         """
         
             Function subscribing the analyser to a submission stream of a subreddit, and judge each new posts
-            TO DO 
+
+            args : 
+                subredditName, string : name of the subreddit to monitor
+            
+            returns:
+                none    
         
         """   
         subreddit = self.reddit.subreddit(subbredditName)
@@ -314,6 +331,12 @@ class ToxicityAnalyser():
         """
         
             Function subscribing the analyser to a comment stream of a subreddit, and judge each new comments
+
+            args : 
+                subredditName, string : name of the subreddit to monitor
+            
+            returns:
+                none
         
         """
         subreddit = self.reddit.subreddit(subbredditName)

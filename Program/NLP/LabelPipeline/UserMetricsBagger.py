@@ -8,7 +8,9 @@ class UserMetricsBagger():
     def __init__(self) -> None:
         """ 
 
-            Transforms into a BagOfWord a RefinedPost Structure
+            Depricated / not used in our project
+
+            Aimed to harvest all of a user activity and stock it in one file 
         
         """
 
